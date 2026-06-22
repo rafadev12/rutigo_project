@@ -1,0 +1,33 @@
+{% extends 'rutas/base.html' %}
+
+{% block title %}Quiénes Somos - Rutigo{% endblock %}
+
+{% block content %}
+<section class="py-16 px-4 max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+            <span class="text-blue-600 font-bold tracking-wider text-xs uppercase block mb-2">Trayectoria e Innovación</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-6 leading-tight">
+                Sobre Nuestra Plataforma <br><span class="text-blue-600">Rutigo</span>
+            </h2>
+            <p class="text-gray-600 leading-relaxed mb-4 font-light">
+                Somos una iniciativa de desarrollo tecnológico especializada en el diseño e implementación de sistemas de automatización robustos para optimizar la infraestructura operativa del transporte público masivo.
+            </p>
+            <p class="text-gray-600 leading-relaxed font-light">
+                Nuestra premisa clave es centralizar y securizar los datos logísticos de rutas, reduciendo los cuellos de botella en la asignación de choferes y ofreciendo reportes nítidos listos para la toma de decisiones corporativas.
+            </p>
+        </div>
+        <div class="bg-slate-950 p-10 rounded-3xl text-white shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl"></div>
+            <h3 class="text-xl font-bold mb-4 text-blue-400">Nuestra Visión</h3>
+            <p class="text-slate-300 font-light leading-relaxed mb-6">
+                Establecer a Rutigo como el ecosistema integral preferido por las empresas de transporte a nivel regional, logrando interconectar de forma fluida vehículos, operarios y bases de datos financieras en un entorno único.
+            </p>
+            <div class="border-t border-slate-800 pt-4 flex items-center justify-between text-xs text-slate-400">
+                <div>Seguridad de Capas</div>
+                <div class="text-emerald-400 font-mono">ONLINE</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

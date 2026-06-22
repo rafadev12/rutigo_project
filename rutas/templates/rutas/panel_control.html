@@ -1,0 +1,272 @@
+{% extends 'rutas/base.html' %}
+
+{% block title %}Panel de Control - RUTIGO{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 py-10">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Panel de Gestión Logística</h1>
+            <p class="text-sm text-slate-500 mt-1">Control profundo de rutas, horarios y unidades en servicio.</p>
+        </div>
+        <div>
+            <a href="{% url 'crear_ruta' %}" class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-blue-500/20 transition duration-200">
+                + Crear Nueva Ruta
+            </a>
+        </div>
+    </div>
+
+    <div class="mb-10 bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden p-4">
+        <div class="flex items-center gap-2 mb-4 px-2">
+            <span class="flex h-3 w-3 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <h2 class="text-lg font-bold text-slate-800">Monitoreo de Unidades en Tiempo Real</h2>
+        </div>
+        
+        <div id="map" class="w-full h-[450px] rounded-2xl bg-slate-100 border border-gray-100"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+        
+        <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
+            <div class="mb-4">
+                <h3 class="text-lg font-bold text-slate-800">Destinos con Mayor Demanda</h3>
+                <p class="text-xs text-slate-400">Volumen total de viajes programados por locación.</p>
+            </div>
+            <div class="relative h-[280px] w-full">
+                <canvas id="chartPopularidad"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
+            <div class="mb-4">
+                <h3 class="text-lg font-bold text-slate-800">Rendimiento Financiero por Destino</h3>
+                <p class="text-xs text-slate-400">Proyección de ingresos totales basados en el costo de pasajes.</p>
+            </div>
+            <div class="relative h-[280px] w-full">
+                <canvas id="chartIngresos"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+<div class="max-w-7xl mx-auto px-4 py-10">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Panel de Gestión Logística</h1>
+            <p class="text-sm text-slate-500 mt-1">Control profundo de rutas, horarios y unidades en servicio.</p>
+        </div>
+        <div>
+            <a href="{% url 'crear_ruta' %}" class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-blue-500/20 transition duration-200">
+                + Crear Nueva Ruta
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-900 text-slate-200 text-xs font-bold uppercase tracking-wider">
+                        <th class="px-6 py-4">Nombre de Ruta</th>
+                        <th class="px-6 py-4">Itinerario</th>
+                        <th class="px-6 py-4">Hora de Salida</th>
+                        <th class="px-6 py-4">Precio Pasaje</th>
+                        <th class="px-6 py-4">Unidad Asignada</th>
+                        <th class="px-6 py-4 text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                    {% for ruta in rutas %}
+                    <tr class="hover:bg-slate-50/80 transition duration-150">
+                        <td class="px-6 py-4 font-semibold text-slate-900">{{ ruta.nombre }}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1.5">
+                                <span class="font-medium">{{ ruta.origen }}</span> 
+                                <span class="text-gray-400">→</span> 
+                                <span class="font-medium text-blue-600">{{ ruta.destino }}</span>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 font-mono text-gray-600">{{ ruta.hora_salida }}</td>
+                        <td class="px-6 py-4 font-bold text-slate-900">${{ ruta.precio_pasaje }}</td>
+                        <td class="px-6 py-4">
+                            {% if ruta.unidad_asignada %}
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                    {{ ruta.unidad_asignada.codigo }}
+                                </span>
+                            {% else %}
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-amber-50 text-amber-700 border border-amber-100">
+                                    No asignada
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-right space-x-3">
+    <a href="{% url 'editar_ruta' ruta.pk %}" class="text-blue-600 hover:text-blue-800 font-bold transition">Editar</a>
+    <a href="{% url 'eliminar_ruta' ruta.pk %}" class="text-red-600 hover:text-red-800 font-bold transition">Eliminar</a>
+</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-gray-400 font-light">
+                            No hay rutas de transporte registradas en el sistema actualmente.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script id="unidades-data" type="application/json">
+[
+    {% for ruta in rutas %}
+        {% if ruta.unidad_asignada %}
+        {
+            "codigo": "{{ ruta.unidad_asignada.codigo|escapejs }}",
+            "chofer": "{{ ruta.unidad_asignada.chofer|escapejs }}",
+            "rutaName": "{{ ruta.nombre|escapejs }}",
+            "trayecto": "{{ ruta.origen|escapejs }} → {{ ruta.destino|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endif %}
+    {% endfor %}
+]
+</script>
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Coordenadas centrales por defecto (ej. zona norte de Anzoátegui / Lechería / Barcelona)
+        const latCentro = 10.2167;
+        const lngCentro = -64.6833;
+
+        // 1. Inicializar el mapa de Leaflet en el div 'map'
+        const map = L.map('map').setView([latCentro, lngCentro], 13);
+
+        // 2. Cargar las capas visuales de OpenStreetMap (Estilo claro e industrial)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // 3. Leer el JSON seguro que viene de Django
+        const unidadesDataElement = document.getElementById('unidades-data');
+        if (unidadesDataElement) {
+            const unidadesBase = JSON.parse(unidadesDataElement.textContent);
+
+            // 4. Mapear y pintar los marcadores reales
+            unidadesBase.forEach((unidad, index) => {
+                // Generamos coordenadas simuladas estables esparcidas cerca del centro
+                const latSimulada = latCentro + (Math.sin(index + 1) * 0.015);
+                const lngSimulada = lngCentro + (Math.cos(index + 1) * 0.015);
+
+                // Crear el marcador en el mapa
+                const marker = L.marker([latSimulada, lngSimulada]).addTo(map);
+
+                // Vincular la ventana de información flotante (Popup)
+                const popupContent = `
+                    <div style="font-family: sans-serif; padding: 4px; color: #1e293b; min-width: 160px;">
+                        <h3 style="margin: 0 0 4px 0; font-weight: 800; color: #2563eb; font-size: 14px;">Unidad ${unidad.codigo}</h3>
+                        <p style="margin: 0 0 6px 0; font-size: 12px; font-weight: 600;">Chofer: <span style="font-weight: 400;">${unidad.chofer}</span></p>
+                        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 6px 0;">
+                        <p style="margin: 0; font-size: 11px; color: #64748b;"><strong>Ruta:</strong> ${unidad.rutaName}</p>
+                        <p style="margin: 2px 0 0 0; font-size: 11px; color: #64748b;"><strong>Tramo:</strong> ${unidad.trayecto}</p>
+                    </div>
+                `;
+                marker.bindPopup(popupContent);
+            });
+        }
+    });
+</script>
+<script id="data-populares-labels" type="application/json">{{ labels_populares }}</script>
+<script id="data-populares-valores" type="application/json">{{ data_populares }}</script>
+<script id="data-ingresos-labels" type="application/json">{{ labels_ingresos }}</script>
+<script id="data-ingresos-valores" type="application/json">{{ data_ingresos }}</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Envolvemos en try/catch para ver si falta algún elemento en el DOM sin colgar el mapa
+        try {
+            const elLabelsPop = document.getElementById('data-populares-labels');
+            const elValoresPop = document.getElementById('data-populares-valores');
+            const elLabelsIng = document.getElementById('data-ingresos-labels');
+            const elValoresIng = document.getElementById('data-ingresos-valores');
+
+            if (!elLabelsPop || !elValoresPop || !elLabelsIng || !elValoresIng) {
+                console.error("Rutigo Error: No se encontraron los bloques de datos JSON en el HTML.");
+                return;
+            }
+
+            const labelsPopulares = JSON.parse(elLabelsPop.textContent || '[]');
+            const dataPopulares = JSON.parse(elValoresPop.textContent || '[]');
+            const labelsIngresos = JSON.parse(elLabelsIng.textContent || '[]');
+            const dataIngresos = JSON.parse(elValoresIng.textContent || '[]');
+
+            // --- GRÁFICO 1: POPULARIDAD ---
+            const ctxPop = document.getElementById('chartPopularidad');
+            if (ctxPop) {
+                new Chart(ctxPop.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: labelsPopulares,
+                        datasets: [{
+                            label: 'Viajes Programados',
+                            data: dataPopulares,
+                            backgroundColor: ['#3b82f6', '#6366f1', '#10b981', '#f59e0b', '#ec4899'],
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+
+            // --- GRÁFICO 2: INGRESOS ---
+            const ctxIng = document.getElementById('chartIngresos');
+            if (ctxIng) {
+                new Chart(ctxIng.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: labelsIngresos,
+                        datasets: [{
+                            label: 'Ingresos Totales ($)',
+                            data: dataIngresos,
+                            backgroundColor: 'rgba(59, 130, 246, 0.85)',
+                            hoverBackgroundColor: '#2563eb',
+                            borderRadius: 8,
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                            x: { grid: { display: false } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("Error inicializando los gráficos de Rutigo:", error);
+        }
+    });
+</script>
+{% endblock %}
+

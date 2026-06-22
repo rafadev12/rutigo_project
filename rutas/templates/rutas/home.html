@@ -1,0 +1,54 @@
+{% extends 'rutas/base.html' %}
+
+{% block title %}Inicio - Rutigo Transport{% endblock %}
+
+{% block content %}
+<section class="bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 text-white py-24 px-4 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent"></div>
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+        <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase mb-6 inline-block">
+            Sistemas Automatizados Core v1.0
+        </span>
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+            Gestión Inteligente de <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Rutas de Transporte</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto mb-10 font-light">
+            Optimización integral en tiempo real, control profundo de flota y automatización logística adaptada a las exigencias operativas modernas.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="{% url 'about' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg shadow-blue-500/20 transition transform hover:-translate-y-0.5">
+                Conoce la Empresa
+            </a>
+            <a href="{% url 'panel_control' %}" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-8 py-3.5 rounded-xl border border-slate-700 transition transform hover:-translate-y-0.5">
+                Control de Datos (Admin)
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="py-20 px-4 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition duration-300">
+            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-bold text-xl mb-6">01</div>
+            <h3 class="text-xl font-bold mb-3 text-slate-800">Sincronización Logística</h3>
+            <p class="text-gray-600 leading-relaxed font-light">
+                Asignación inteligente y automatizada de unidades y choferes para mitigar el margen de error humano en itinerarios.
+            </p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition duration-300">
+            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold text-xl mb-6">02</div>
+            <h3 class="text-xl font-bold mb-3 text-slate-800">Monitoreo Tarifario</h3>
+            <p class="text-gray-600 leading-relaxed font-light">
+                Control riguroso de precios de pasajes y asignación automatizada de flotas según la demanda por tramo y destino.
+            </p>
+        </div>
+        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition duration-300">
+            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-xl mb-6">03</div>
+            <h3 class="text-xl font-bold mb-3 text-slate-800">Seguridad de Datos</h3>
+            <p class="text-gray-600 leading-relaxed font-light">
+                Panel administrativo encriptado con roles protegidos y un CRUD interactivo exclusivo para la gerencia operativa de la empresa.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Rutigo - Automatización de Transporte{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configuración de colores personalizados para Rutigo si deseas expandirlos más adelante
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rutigoBlue: '#1e3c72',
+                        rutigoDark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Animación personalizada para el pulso del logo en la pantalla de carga */
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 flex flex-col min-h-screen">
+
+    <div id="loading-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center transition-opacity duration-700 ease-out">
+        <div class="text-center animate-pulse-slow">
+            <div class="inline-flex items-center justify-center w-24 h-24 rounded-2xl bg-blue-600 text-white text-4xl font-black tracking-tighter mb-4 shadow-lg shadow-blue-500/30">
+                R!
+            </div>
+            <h1 class="text-white text-3xl font-extrabold tracking-widest">RUTIGO<span class="text-blue-500">!</span></h1>
+            <p class="text-slate-400 text-sm mt-2 tracking-wide font-light">Iniciando sistemas de transporte...</p>
+        </div>
+        <div class="absolute bottom-10 w-48 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div class="bg-blue-500 h-full w-1/2 rounded-full animate-[infinite-scroll_1.5s_ease-in-out_infinite]" style="animation: loading-bar 1.5s infinite ease-in-out;"></div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes loading-bar {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+    </style>
+
+    <div id="main-content" class="opacity-0 transition-opacity duration-700 ease-in flex flex-col flex-grow">
+        
+        <nav class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <a href="{% url 'home' %}" class="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                            <span class="bg-blue-600 px-2 py-0.5 rounded text-base font-black">R!</span>
+                            RUTIGO<span class="text-blue-500">!</span>
+                        </a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="{% url 'home' %}" class="text-gray-300 hover:bg-slate-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">Inicio</a>
+                            <a href="{% url 'about' %}" class="text-gray-300 hover:bg-slate-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">Quiénes Somos</a>
+                            <a href="{% url 'panel_control' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-bold shadow-md shadow-blue-500/20 transition">Panel Avanzado</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="flex-grow">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 text-center text-sm">
+                <p>&copy; 2026 Rutigo Systems. Automatización inteligente de rutas de transporte público.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            // Le damos un pequeño delay artificial de 1.2 segundos para que se aprecie la animación del logo
+            setTimeout(() => {
+                // Desvanecer pantalla de carga
+                loadingScreen.classList.add('opacity-0');
+                // Mostrar contenido de la web
+                mainContent.classList.remove('opacity-0');
+                mainContent.classList.add('opacity-100');
+                
+                // Remover el div del DOM después de la transición para liberar memoria
+                setTimeout(() => {
+                    loadingScreen.remove();
+                }, 700);
+            }, 1200);
+        });
+    </script>
+</body>
+</html>
